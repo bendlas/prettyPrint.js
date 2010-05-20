@@ -572,9 +572,14 @@ var prettyPrint = (function(){
                 stack[key||'TOP'] = fn;
                 
                 var miniTable = util.table(['Function',null], 'function'),
-                    argsTable = util.table(['Arguments']),
-                    args = fn.toString().match(/\((.+?)\)/),
-                    body = fn.toString().match(/\(.*?\)\s+?\{?([\S\s]+)/)[1].replace(/\}?$/,'');
+                argsTable = util.table(['Arguments']),
+                args = fn.toString().match(/\((.+?)\)/),
+		body = fn.toString().match(/.*?\{((\S|\s)*)\}/);
+		if (body) {
+		    body = body[1].replace(/\}?$/,'');
+		} else {
+		    body = "FIXME, can't serialize: " + fn.toString();
+		}
                     
                 miniTable
                     .addRow(['arguments', args ? args[1].replace(/[^\w_,\s]/g,'') : '<small>[none/native]</small>'])
